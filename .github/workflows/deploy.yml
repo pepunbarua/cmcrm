@@ -1,0 +1,99 @@
+name: Deploy CMCRM
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - sandbox
+      - development
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # ------------------ DEPLOY TO PRODUCTION ------------------
+    - name: Deploy to Production (main)
+      if: github.ref == 'refs/heads/main'
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.CPANEL_HOST }}
+        username: ${{ secrets.PROD_CPANEL_USERNAME }}
+        key: ${{ secrets.PROD_SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          echo "🚀 Deploying CMCRM to Production..."
+          cd ~/core
+          git pull origin main
+          # # নিচের লাইন প্রয়োজনে কাস্টমাইজ করুন
+          # php artisan serve
+          echo "✅ Code updated. Running post-deployment tasks..."
+          # Example for Laravel: composer install --no-dev --optimize-autoloader && php artisan migrate --force
+          # Example for Node.js: npm install --production && npm run build
+          echo "🎉 Production deployment complete!"
+
+    # ------------------ DEPLOY TO STAGING ------------------
+    - name: Deploy to Staging (staging)
+      if: github.ref == 'refs/heads/staging'
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.CPANEL_HOST }}
+        username: ${{ secrets.STAGING_CP_USER }}
+        key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          echo "🚀 Deploying CMCRM to Staging..."
+          cd ~/core
+          # Stash any uncommitted changes
+          git stash
+          # Start SSH agent and add key
+          git config pull.rebase true
+          git pull origin staging
+          # নিচের লাইন প্রয়োজনে কাস্টমাইজ করুন
+          # php artisan serve
+          echo "✅ Code updated. Running post-deployment tasks..."
+          echo "🎉 Staging deployment complete!" 
+
+    # ------------------ DEPLOY TO SANDBOX ------------------
+    - name: Deploy to Sandbox (sandbox)
+      if: github.ref == 'refs/heads/sandbox'
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.CPANEL_HOST }}
+        username: ${{ secrets.SANDBOX_CP_USER }}
+        key: ${{ secrets.SANDBOX_SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          echo "🚀 Deploying CMCRM to Sandbox..."
+          cd ~/core
+          # Stash any uncommitted changes
+          git stash
+          git config pull.rebase true
+          git pull origin sandbox
+          # # নিচের লাইন প্রয়োজনে কাস্টমাইজ করুন
+          # php artisan serve
+          echo "✅ Code updated. Running post-deployment tasks..."
+          echo "🎉 Sandbox deployment complete!"
+
+    # ------------------ DEPLOY TO DEVELOPMENT ------------------
+    - name: Deploy to Development (development)
+      if: github.ref == 'refs/heads/development'
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.CPANEL_HOST }}
+        username: ${{ secrets.DEV_CP_USER }}
+        key: ${{ secrets.DEV_SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          echo "🚀 Deploying CMCRM to Development..."
+          cd ~/core
+          git config pull.rebase true
+          git pull origin development
+          # # নিচের লাইন প্রয়োজনে কাস্টমাইজ করুন
+          # php artisan serve
+          echo "✅ Code updated. Running post-deployment tasks..."
+          echo "🎉 Development deployment complete!"
