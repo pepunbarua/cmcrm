@@ -35,7 +35,16 @@
                             @endif
                         </td>
                         <td class="px-6 py-4">
-                            <span class="text-white/80 capitalize">{{ str_replace('_', ' ', $vendor->vendor_type) }}</span>
+                            @if($vendor->vendorType)
+                                <div class="flex items-center gap-2">
+                                    @if($vendor->vendorType->icon)
+                                        <i class="fa-duotone {{ $vendor->vendorType->icon }} text-purple-400"></i>
+                                    @endif
+                                    <span class="text-white/80">{{ $vendor->vendorType->name }}</span>
+                                </div>
+                            @else
+                                <span class="text-white/50">-</span>
+                            @endif
                         </td>
                         <td class="px-6 py-4 text-white/80">{{ $vendor->city ?? '-' }}</td>
                         <td class="px-6 py-4">

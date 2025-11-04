@@ -3,26 +3,28 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vendor;
+use App\Models\VendorType;
 use Illuminate\Http\Request;
 
 class VendorController extends Controller
 {
     public function index()
     {
-        $vendors = Vendor::latest()->paginate(15);
+        $vendors = Vendor::with('vendorType')->latest()->paginate(15);
         return view('vendors.index', compact('vendors'));
     }
 
     public function create()
     {
-        return view('vendors.create');
+        $vendorTypes = VendorType::active()->get();
+        return view('vendors.create', compact('vendorTypes'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'vendor_name' => 'required|max:255',
-            'vendor_type' => 'required|in:wedding_venue,convention_hall,community_center,hotel,other',
+            'vendor_type_id' => 'nullable|exists:vendor_types,id',
             'phone' => 'required',
             'email' => 'nullable|email',
             'city' => 'nullable',
@@ -48,14 +50,15 @@ class VendorController extends Controller
 
     public function edit(Vendor $vendor)
     {
-        return view('vendors.edit', compact('vendor'));
+        $vendorTypes = VendorType::active()->get();
+        return view('vendors.edit', compact('vendor', 'vendorTypes'));
     }
 
     public function update(Request $request, Vendor $vendor)
     {
         $validated = $request->validate([
             'vendor_name' => 'required|max:255',
-            'vendor_type' => 'required|in:wedding_venue,convention_hall,community_center,hotel,other',
+            'vendor_type_id' => 'nullable|exists:vendor_types,id',
             'phone' => 'required',
             'email' => 'nullable|email',
             'city' => 'nullable',

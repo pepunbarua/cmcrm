@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\VendorTypeController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\OrderController;
@@ -94,6 +95,16 @@ Route::middleware(['auth'])->group(function () {
     // Settings - General
     Route::get('/settings/general', [SettingsController::class, 'general'])->name('settings.general')->middleware('permission:manage users');
     Route::post('/settings/general', [SettingsController::class, 'updateGeneral'])->name('settings.general.update')->middleware('permission:manage users');
+    
+    // Settings - Vendor Types
+    Route::resource('settings/vendor-types', VendorTypeController::class)->names([
+        'index' => 'settings.vendor-types.index',
+        'create' => 'settings.vendor-types.create',
+        'store' => 'settings.vendor-types.store',
+        'edit' => 'settings.vendor-types.edit',
+        'update' => 'settings.vendor-types.update',
+        'destroy' => 'settings.vendor-types.destroy',
+    ])->middleware('permission:manage users');
     
     // User Management
     Route::resource('users', UserController::class)->middleware('permission:manage users');

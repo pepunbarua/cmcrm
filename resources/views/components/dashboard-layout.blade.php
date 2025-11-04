@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $title ?? 'Dashboard - CheckMate Events' }}</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css">
+    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/duotone.css">
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     @vite(['resources/css/app.css','resources/js/app.js'])
     <script>
@@ -33,27 +35,32 @@
             <div class="p-6">
                 <img src="{{ asset('assets/images/logo.webp') }}" alt="CheckMate Events" class="h-12 w-auto mb-8">
                 
-                <nav class="space-y-1 max-h-[calc(100vh-280px)] overflow-y-auto">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('dashboard') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                <nav class="space-y-2 max-h-[calc(100vh-280px)] overflow-y-auto">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('dashboard') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
+                        <i class="fa-duotone fa-grid-2 text-lg"></i>
                         <span class="font-medium text-sm">Dashboard</span>
                     </a>
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view vendors')
                     <div x-data="{ open: {{ request()->routeIs('vendors.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('vendors.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('vendors.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                <i class="fa-duotone fa-building text-lg"></i>
                                 <span class="font-medium text-sm">Vendors</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('vendors.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('vendors.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('vendors.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('vendors.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
                                 All Vendors
                             </a>
                             @can('create vendors')
-                            <a href="{{ route('vendors.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('vendors.create') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('vendors.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('vendors.create') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-plus text-xs"></i>
                                 Add New Vendor
                             </a>
                             @endcan
@@ -61,228 +68,290 @@
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view leads')
                     <div x-data="{ open: {{ request()->routeIs('leads.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('leads.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('leads.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                <i class="fa-duotone fa-users text-lg"></i>
                                 <span class="font-medium text-sm">Leads</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('leads.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('leads.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('leads.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('leads.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
                                 All Leads
                             </a>
                             @can('create leads')
-                            <a href="{{ route('leads.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('leads.create') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('leads.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('leads.create') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-plus text-xs"></i>
                                 Add New Lead
                             </a>
                             @endcan
-                            <a href="{{ route('leads.index', ['status' => 'new']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('leads.index', ['status' => 'new']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-sparkles text-xs"></i>
                                 New Leads
                             </a>
-                            <a href="{{ route('leads.index', ['status' => 'contacted']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('leads.index', ['status' => 'contacted']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-phone text-xs"></i>
                                 Contacted
                             </a>
-                            <a href="{{ route('leads.index', ['status' => 'converted']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('leads.index', ['status' => 'converted']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-check-circle text-xs"></i>
                                 Converted
                             </a>
                         </div>
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view orders')
                     <div x-data="{ open: {{ request()->routeIs('orders.*') || request()->routeIs('payments.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('orders.*') || request()->routeIs('payments.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('orders.*') || request()->routeIs('payments.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                <i class="fa-duotone fa-file-invoice-dollar text-lg"></i>
                                 <span class="font-medium text-sm">Orders</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('orders.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('orders.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('orders.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('orders.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
                                 All Orders
                             </a>
                             @can('create orders')
-                            <a href="{{ route('orders.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('orders.create') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('orders.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('orders.create') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-plus text-xs"></i>
                                 New Order
                             </a>
                             @endcan
-                            <a href="{{ route('orders.index', ['status' => 'pending']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('orders.index', ['status' => 'pending']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-clock text-xs"></i>
                                 Pending Orders
                             </a>
-                            <a href="{{ route('orders.index', ['status' => 'confirmed']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('orders.index', ['status' => 'confirmed']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-circle-check text-xs"></i>
                                 Confirmed
                             </a>
-                            <a href="{{ route('orders.index', ['payment_status' => 'due']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('orders.index', ['payment_status' => 'due']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-bangladeshi-taka-sign text-xs"></i>
                                 Payment Due
                             </a>
                         </div>
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view events')
                     <div x-data="{ open: {{ request()->routeIs('events.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('events.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('events.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <i class="fa-duotone fa-calendar-star text-lg"></i>
                                 <span class="font-medium text-sm">Events</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('events.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('events.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('events.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('events.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
                                 All Events
                             </a>
                             @can('create events')
-                            <a href="{{ route('events.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('events.create') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('events.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('events.create') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-plus text-xs"></i>
                                 Schedule Event
                             </a>
                             @endcan
-                            <a href="{{ route('events.index', ['status' => 'scheduled']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('events.index', ['status' => 'scheduled']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-calendar-clock text-xs"></i>
                                 Upcoming Events
                             </a>
-                            <a href="{{ route('events.index', ['status' => 'in_progress']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('events.index', ['status' => 'in_progress']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-hourglass-half text-xs"></i>
                                 In Progress
                             </a>
-                            <a href="{{ route('events.index', ['status' => 'completed']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('events.index', ['status' => 'completed']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-circle-check text-xs"></i>
                                 Completed
                             </a>
                         </div>
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view team members')
                     <div x-data="{ open: {{ request()->routeIs('team.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('team.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('team.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                                <i class="fa-duotone fa-people-group text-lg"></i>
                                 <span class="font-medium text-sm">Team</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('team.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('team.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('team.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('team.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
                                 All Members
                             </a>
                             @can('create team members')
-                            <a href="{{ route('team.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('team.create') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('team.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('team.create') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-user-plus text-xs"></i>
                                 Add Member
                             </a>
                             @endcan
-                            <a href="{{ route('team.index', ['role_type' => 'photographer']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('team.index', ['role_type' => 'photographer']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-camera text-xs"></i>
                                 Photographers
                             </a>
-                            <a href="{{ route('team.index', ['role_type' => 'videographer']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('team.index', ['role_type' => 'videographer']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-video text-xs"></i>
                                 Videographers
                             </a>
-                            <a href="{{ route('team.index', ['availability_status' => 'available']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('team.index', ['availability_status' => 'available']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-circle-check text-xs"></i>
                                 Available Now
                             </a>
                         </div>
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view payments')
                     <div x-data="{ open: {{ request()->routeIs('payments.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('payments.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('payments.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                <i class="fa-duotone fa-bangladeshi-taka-sign text-lg"></i>
                                 <span class="font-medium text-sm">Payments</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('payments.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('payments.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('payments.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('payments.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
                                 All Payments
                             </a>
-                            <a href="{{ route('payments.index', ['status' => 'due']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('payments.index', ['status' => 'due']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-clock text-xs"></i>
                                 Due Payments
                             </a>
-                            <a href="{{ route('payments.index', ['status' => 'overdue']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('payments.index', ['status' => 'overdue']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-triangle-exclamation text-xs"></i>
                                 Overdue
                             </a>
-                            <a href="{{ route('payments.index', ['status' => 'completed']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('payments.index', ['status' => 'completed']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-circle-check text-xs"></i>
                                 Completed
                             </a>
                         </div>
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view deliverables')
                     <div x-data="{ open: {{ request()->routeIs('deliverables.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('deliverables.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('deliverables.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <i class="fa-duotone fa-box-check text-lg"></i>
                                 <span class="font-medium text-sm">Deliverables</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('deliverables.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('deliverables.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('deliverables.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('deliverables.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
                                 All Deliverables
                             </a>
-                            <a href="{{ route('deliverables.index', ['status' => 'pending']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('deliverables.index', ['status' => 'pending']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-clock text-xs"></i>
                                 Pending Upload
                             </a>
-                            <a href="{{ route('deliverables.index', ['status' => 'uploaded']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('deliverables.index', ['status' => 'uploaded']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-cloud-arrow-up text-xs"></i>
                                 Uploaded
                             </a>
-                            <a href="{{ route('deliverables.index', ['status' => 'delivered']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400 transition">
+                            <a href="{{ route('deliverables.index', ['status' => 'delivered']) }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
+                                <i class="fa-duotone fa-truck-fast text-xs"></i>
                                 Delivered
                             </a>
                         </div>
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('view reports')
                     <div x-data="{ open: {{ request()->routeIs('reports.*') ? 'true' : 'false' }} }">
-                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('reports.*') ? 'bg-purple-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('reports.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
                             <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                                <i class="fa-duotone fa-chart-mixed text-lg"></i>
                                 <span class="font-medium text-sm">Reports</span>
                             </div>
-                            <svg class="w-4 h-4 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="ml-8 mt-1 space-y-1">
-                            <a href="{{ route('reports.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.index') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('reports.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-chart-pie text-xs"></i>
                                 Overview
                             </a>
-                            <a href="{{ route('reports.revenue') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.revenue') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('reports.revenue') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.revenue') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-bangladeshi-taka-sign text-xs"></i>
                                 Revenue Report
                             </a>
-                            <a href="{{ route('reports.events') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.events') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('reports.events') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.events') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-calendar-days text-xs"></i>
                                 Events Report
                             </a>
-                            <a href="{{ route('reports.team') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.team') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('reports.team') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('reports.team') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-chart-line-up text-xs"></i>
                                 Team Performance
                             </a>
                         </div>
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     @can('manage users')
                     <div x-data="{ open: {{ request()->routeIs('settings.*') ? 'true' : 'false' }} }" class="space-y-1">
-                        <button @click="open = !open" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('settings.*') ? 'bg-purple-50 dark:bg-white/10 text-purple-600 dark:text-purple-400' : 'text-gray-600 dark:text-white/60 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-gray-900 dark:hover:text-white' }} transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <button @click="open = !open" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('settings.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
+                            <i class="fa-duotone fa-gear text-lg"></i>
                             <span class="font-medium text-sm flex-1 text-left">Settings</span>
-                            <svg class="w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
                         </button>
-                        <div x-show="open" x-collapse class="pl-4 space-y-1">
-                            <a href="{{ route('settings.company') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('settings.company') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('settings.company') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('settings.company') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-building text-xs"></i>
                                 Company Profile
                             </a>
-                            <a href="{{ route('users.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('users.*') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('users.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('users.*') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-users-gear text-xs"></i>
                                 User Management
                             </a>
-                            <a href="{{ route('roles.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('roles.*') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('roles.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('roles.*') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-shield-halved text-xs"></i>
                                 Roles & Permissions
                             </a>
-                            <a href="{{ route('settings.general') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('settings.general') ? 'text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:text-purple-600 dark:hover:text-purple-400' }} transition">
+                            <a href="{{ route('settings.vendor-types.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('settings.vendor-types.*') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-tags text-xs"></i>
+                                Vendor Types
+                            </a>
+                            <a href="{{ route('settings.general') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('settings.general') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-sliders text-xs"></i>
                                 General Settings
                             </a>
                         </div>

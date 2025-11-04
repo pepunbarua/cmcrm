@@ -5,14 +5,17 @@
     </div>
 
     <div>
-        <label class="block text-sm font-medium text-white mb-2">Vendor Type *</label>
-        <select name="vendor_type" required class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+        <label class="block text-sm font-medium text-white mb-2">Vendor Type</label>
+        <select name="vendor_type_id" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
             <option value="">Select Type</option>
-            <option value="wedding_venue" {{ old('vendor_type', $vendor->vendor_type ?? '') == 'wedding_venue' ? 'selected' : '' }}>Wedding Venue</option>
-            <option value="convention_hall" {{ old('vendor_type', $vendor->vendor_type ?? '') == 'convention_hall' ? 'selected' : '' }}>Convention Hall</option>
-            <option value="community_center" {{ old('vendor_type', $vendor->vendor_type ?? '') == 'community_center' ? 'selected' : '' }}>Community Center</option>
-            <option value="hotel" {{ old('vendor_type', $vendor->vendor_type ?? '') == 'hotel' ? 'selected' : '' }}>Hotel</option>
-            <option value="other" {{ old('vendor_type', $vendor->vendor_type ?? '') == 'other' ? 'selected' : '' }}>Other</option>
+            @foreach($vendorTypes as $type)
+                <option value="{{ $type->id }}" {{ old('vendor_type_id', $vendor->vendor_type_id ?? '') == $type->id ? 'selected' : '' }}>
+                    @if($type->icon)
+                        <i class="fa-duotone {{ $type->icon }}"></i>
+                    @endif
+                    {{ $type->name }}
+                </option>
+            @endforeach
         </select>
     </div>
 

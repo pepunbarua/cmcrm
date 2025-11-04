@@ -33,7 +33,7 @@
         
         <x-stat-card 
             title="Revenue" 
-            value="$48,290" 
+            value="48,290" 
             change="+16% from last month"
             icon="money"
             color="green"
@@ -158,21 +158,21 @@
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-mono">#INV-001</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">Sarah & John</td>
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-white/60">Wedding Photography</td>
-                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-semibold">$3,500</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-semibold">৳3,500</td>
                         <td class="px-6 py-4"><span class="px-3 py-1 rounded-full bg-green-500/20 text-green-600 dark:text-green-400 text-xs font-medium">Paid</span></td>
                     </tr>
                     <tr class="hover:bg-purple-50 dark:hover:bg-white/5 transition">
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-mono">#INV-002</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">Tech Corp</td>
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-white/60">Corporate Event</td>
-                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-semibold">$2,800</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-semibold">৳2,800</td>
                         <td class="px-6 py-4"><span class="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-700 dark:text-yellow-400 text-xs font-medium">Pending</span></td>
                     </tr>
                     <tr class="hover:bg-purple-50 dark:hover:bg-white/5 transition">
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-mono">#INV-003</td>
                         <td class="px-6 py-4 text-sm text-gray-900 dark:text-white">Emma Johnson</td>
                         <td class="px-6 py-4 text-sm text-gray-600 dark:text-white/60">Birthday Party</td>
-                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-semibold">$1,200</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 dark:text-white font-semibold">৳1,200</td>
                         <td class="px-6 py-4"><span class="px-3 py-1 rounded-full bg-green-500/20 text-green-600 dark:text-green-400 text-xs font-medium">Paid</span></td>
                     </tr>
                 </tbody>

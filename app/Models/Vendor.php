@@ -14,6 +14,7 @@ class Vendor extends Model
     protected $fillable = [
         'vendor_name',
         'vendor_type',
+        'vendor_type_id',
         'address',
         'city',
         'contact_person',
@@ -27,6 +28,11 @@ class Vendor extends Model
     protected $casts = [
         'commission_rate' => 'decimal:2',
     ];
+
+    public function vendorType()
+    {
+        return $this->belongsTo(VendorType::class);
+    }
 
     public function leads(): HasMany
     {
