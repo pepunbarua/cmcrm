@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('vendors', function (Blueprint $table) {
             $table->id();
             $table->string('vendor_name');
-            $table->enum('vendor_type', ['wedding_venue', 'convention_hall', 'community_center', 'hotel', 'other']);
+            $table->foreignId('vendor_type_id')->nullable()->constrained()->onDelete('set null');
             $table->text('address')->nullable();
             $table->string('city')->nullable();
             $table->string('contact_person')->nullable();

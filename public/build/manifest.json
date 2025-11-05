@@ -1,11 +1,67 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-D3taoBp9.css",
+    "file": "assets/app-DrF1KZvc.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
       "app.css"
     ]
+  },
+  "resources/fonts/font-awesome/fa-brands-400.ttf": {
+    "file": "assets/fa-brands-400-D2uq21Pt.ttf",
+    "src": "resources/fonts/font-awesome/fa-brands-400.ttf"
+  },
+  "resources/fonts/font-awesome/fa-brands-400.woff2": {
+    "file": "assets/fa-brands-400-ChfuyuEw.woff2",
+    "src": "resources/fonts/font-awesome/fa-brands-400.woff2"
+  },
+  "resources/fonts/font-awesome/fa-duotone-900.ttf": {
+    "file": "assets/fa-duotone-900-Dtzf3pUr.ttf",
+    "src": "resources/fonts/font-awesome/fa-duotone-900.ttf"
+  },
+  "resources/fonts/font-awesome/fa-duotone-900.woff2": {
+    "file": "assets/fa-duotone-900-Cd0D57RO.woff2",
+    "src": "resources/fonts/font-awesome/fa-duotone-900.woff2"
+  },
+  "resources/fonts/font-awesome/fa-light-300.ttf": {
+    "file": "assets/fa-light-300-CkZKT5UH.ttf",
+    "src": "resources/fonts/font-awesome/fa-light-300.ttf"
+  },
+  "resources/fonts/font-awesome/fa-light-300.woff2": {
+    "file": "assets/fa-light-300-DSvnV_31.woff2",
+    "src": "resources/fonts/font-awesome/fa-light-300.woff2"
+  },
+  "resources/fonts/font-awesome/fa-regular-400.ttf": {
+    "file": "assets/fa-regular-400-DHy3G09d.ttf",
+    "src": "resources/fonts/font-awesome/fa-regular-400.ttf"
+  },
+  "resources/fonts/font-awesome/fa-regular-400.woff2": {
+    "file": "assets/fa-regular-400-BOgqvwHK.woff2",
+    "src": "resources/fonts/font-awesome/fa-regular-400.woff2"
+  },
+  "resources/fonts/font-awesome/fa-solid-900.ttf": {
+    "file": "assets/fa-solid-900-DOfUg0e9.ttf",
+    "src": "resources/fonts/font-awesome/fa-solid-900.ttf"
+  },
+  "resources/fonts/font-awesome/fa-solid-900.woff2": {
+    "file": "assets/fa-solid-900-BoIGJYu2.woff2",
+    "src": "resources/fonts/font-awesome/fa-solid-900.woff2"
+  },
+  "resources/fonts/font-awesome/fa-thin-100.ttf": {
+    "file": "assets/fa-thin-100-CHro5uGz.ttf",
+    "src": "resources/fonts/font-awesome/fa-thin-100.ttf"
+  },
+  "resources/fonts/font-awesome/fa-thin-100.woff2": {
+    "file": "assets/fa-thin-100-DinVcC42.woff2",
+    "src": "resources/fonts/font-awesome/fa-thin-100.woff2"
+  },
+  "resources/fonts/font-awesome/fa-v4compatibility.ttf": {
+    "file": "assets/fa-v4compatibility-vdIG3YMT.ttf",
+    "src": "resources/fonts/font-awesome/fa-v4compatibility.ttf"
+  },
+  "resources/fonts/font-awesome/fa-v4compatibility.woff2": {
+    "file": "assets/fa-v4compatibility-BM8kBeXM.woff2",
+    "src": "resources/fonts/font-awesome/fa-v4compatibility.woff2"
   },
   "resources/js/app.js": {
     "file": "assets/app-CvgioS1y.js",
