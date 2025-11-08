@@ -25,6 +25,15 @@ class LeadController extends Controller
             ->when($request->vendor_id, function($q) use ($request) {
                 $q->where('vendor_id', $request->vendor_id);
             })
+            ->when($request->event_type, function($q) use ($request) {
+                $q->where('event_type', $request->event_type);
+            })
+            ->when($request->date_from, function($q) use ($request) {
+                $q->where('event_date', '>=', $request->date_from);
+            })
+            ->when($request->date_to, function($q) use ($request) {
+                $q->where('event_date', '<=', $request->date_to);
+            })
             ->when($request->search, function($q) use ($request) {
                 $q->where(function($query) use ($request) {
                     $query->where('client_name', 'like', '%' . $request->search . '%')

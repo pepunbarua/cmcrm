@@ -1,5 +1,32 @@
 <x-dashboard-layout>
     <div class="p-6">
+        @if(!$teamMember->user)
+            <x-card>
+                <div class="text-center py-12">
+                    <div class="text-red-500 dark:text-red-400 mb-4">
+                        <i class="fa-duotone fa-triangle-exclamation text-6xl"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">User Not Found</h2>
+                    <p class="text-gray-600 dark:text-white/60 mb-4">
+                        This team member's user account has been deleted or is missing.
+                    </p>
+                    <div class="flex gap-3 justify-center">
+                        <a href="{{ route('team.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
+                            Back to Team
+                        </a>
+                        @can('delete team members')
+                        <form action="{{ route('team.destroy', ['team' => $teamMember]) }}" method="POST" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+                                Delete This Record
+                            </button>
+                        </form>
+                        @endcan
+                    </div>
+                </div>
+            </x-card>
+        @else
         <!-- Header -->
         <div class="mb-6">
             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-white/60 mb-2">
@@ -16,7 +43,7 @@
                 </div>
                 <div class="flex gap-2">
                     @can('edit team members')
-                    <x-button href="{{ route('team.edit', $teamMember) }}" variant="secondary">
+                    <x-button href="{{ route('team.edit', ['team' => $teamMember]) }}" variant="secondary">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
@@ -261,7 +288,7 @@
     <script>
         async function updateAvailability(status) {
             try {
-                const response = await fetch('{{ route("team.update-availability", $teamMember) }}', {
+                const response = await fetch('{{ route("team.update-availability", ['teamMember' => $teamMember]) }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -293,7 +320,7 @@
             }
 
             try {
-                const response = await fetch('{{ route("team.destroy", $teamMember) }}', {
+                const response = await fetch('{{ route("team.destroy", ['team' => $teamMember]) }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -318,4 +345,5 @@
             }
         }
     </script>
+    @endif
 </x-dashboard-layout>

@@ -6,6 +6,7 @@ use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
@@ -69,6 +70,8 @@ class TeamMemberController extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
+            
             // Create user
             $user = User::create([
                 'name' => $validated['name'],
@@ -97,12 +100,16 @@ class TeamMemberController extends Controller
                 ->causedBy(auth()->user())
                 ->log('Team member created: ' . $user->name);
 
+            DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Team member created successfully',
                 'redirect' => route('team.index')
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Error creating team member: ' . $e->getMessage()
@@ -159,6 +166,8 @@ class TeamMemberController extends Controller
         ]);
 
         try {
+            DB::beginTransaction();
+            
             // Update user
             $updateData = [
                 'name' => $validated['name'],
@@ -193,12 +202,16 @@ class TeamMemberController extends Controller
                 ->causedBy(auth()->user())
                 ->log('Team member updated: ' . $teamMember->user->name);
 
+            DB::commit();
+
             return response()->json([
                 'success' => true,
                 'message' => 'Team member updated successfully',
                 'redirect' => route('team.show', $teamMember)
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
+            
             return response()->json([
                 'success' => false,
                 'message' => 'Error updating team member: ' . $e->getMessage()

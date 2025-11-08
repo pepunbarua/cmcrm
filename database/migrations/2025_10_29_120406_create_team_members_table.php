@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->enum('role_type', ['photographer', 'videographer', 'drone_operator', 'editor']);
-            $table->enum('skill_level', ['junior', 'senior', 'expert'])->default('junior');
+            $table->enum('skill_level', ['junior', 'mid_level', 'senior', 'expert'])->default('junior');
             $table->enum('availability_status', ['available', 'busy', 'on_leave'])->default('available');
             $table->decimal('hourly_rate', 8, 2)->nullable();
             $table->text('equipment_owned')->nullable();

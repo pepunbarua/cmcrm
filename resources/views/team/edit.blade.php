@@ -7,7 +7,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
-                <a href="{{ route('team.show', $teamMember) }}" class="hover:text-purple-600 dark:hover:text-purple-400">{{ $teamMember->user->name }}</a>
+                <a href="{{ route('team.show', ['team' => $teamMember]) }}" class="hover:text-purple-600 dark:hover:text-purple-400">{{ $teamMember->user->name }}</a>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -165,7 +165,7 @@
                     </svg>
                     Update Team Member
                 </button>
-                <a href="{{ route('team.show', $teamMember) }}" class="px-6 py-3 bg-gray-200 dark:bg-white/10 text-gray-900 dark:text-white rounded-xl hover:bg-gray-300 dark:hover:bg-white/20 transition">
+                <a href="{{ route('team.show', ['team' => $teamMember]) }}" class="px-6 py-3 bg-gray-200 dark:bg-white/10 text-gray-900 dark:text-white rounded-xl hover:bg-gray-300 dark:hover:bg-white/20 transition">
                     Cancel
                 </a>
             </div>

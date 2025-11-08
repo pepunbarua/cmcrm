@@ -20,38 +20,69 @@
 
     <!-- Filters -->
     <x-card class="mb-6">
-        <form method="GET" action="{{ route('leads.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, phone, email..." class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400">
+        <form method="GET" action="{{ route('leads.index') }}" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name, phone, email..." class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <div>
+                    <select name="vendor_id" class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        <option value="">All Vendors</option>
+                        @foreach($vendors as $vendor)
+                            <option value="{{ $vendor->id }}" {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>
+                                {{ $vendor->vendor_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <select name="status" class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        <option value="">All Statuses</option>
+                        <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>New</option>
+                        <option value="contacted" {{ request('status') == 'contacted' ? 'selected' : '' }}>Contacted</option>
+                        <option value="follow_up" {{ request('status') == 'follow_up' ? 'selected' : '' }}>Follow Up</option>
+                        <option value="qualified" {{ request('status') == 'qualified' ? 'selected' : '' }}>Qualified</option>
+                        <option value="converted" {{ request('status') == 'converted' ? 'selected' : '' }}>Converted</option>
+                        <option value="lost" {{ request('status') == 'lost' ? 'selected' : '' }}>Lost</option>
+                    </select>
+                </div>
+                <div>
+                    <select name="event_type" class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        <option value="">All Event Types</option>
+                        <option value="wedding" {{ request('event_type') == 'wedding' ? 'selected' : '' }}>Wedding</option>
+                        <option value="birthday" {{ request('event_type') == 'birthday' ? 'selected' : '' }}>Birthday</option>
+                        <option value="corporate" {{ request('event_type') == 'corporate' ? 'selected' : '' }}>Corporate</option>
+                        <option value="other" {{ request('event_type') == 'other' ? 'selected' : '' }}>Other</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <select name="vendor_id" class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
-                    <option value="">All Vendors</option>
-                    @foreach($vendors as $vendor)
-                        <option value="{{ $vendor->id }}" {{ request('vendor_id') == $vendor->id ? 'selected' : '' }}>
-                            {{ $vendor->vendor_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <select name="status" class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
-                    <option value="">All Statuses</option>
-                    <option value="new" {{ request('status') == 'new' ? 'selected' : '' }}>New</option>
-                    <option value="contacted" {{ request('status') == 'contacted' ? 'selected' : '' }}>Contacted</option>
-                    <option value="follow_up" {{ request('status') == 'follow_up' ? 'selected' : '' }}>Follow Up</option>
-                    <option value="qualified" {{ request('status') == 'qualified' ? 'selected' : '' }}>Qualified</option>
-                    <option value="converted" {{ request('status') == 'converted' ? 'selected' : '' }}>Converted</option>
-                    <option value="lost" {{ request('status') == 'lost' ? 'selected' : '' }}>Lost</option>
-                </select>
-            </div>
-            <div class="flex gap-2">
-                <button type="submit" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition">
-                    Filter
-                </button>
-                <a href="{{ route('leads.index') }}" class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">
-                    Reset
-                </a>
+            
+            <!-- Event Date Range Filter -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1">
+                        <i class="fa-duotone fa-calendar-range text-purple-400"></i> Event Date From
+                    </label>
+                    <input type="date" name="date_from" value="{{ request('date_from') }}" 
+                           class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <div>
+                    <label class="block text-sm text-gray-300 mb-1">
+                        <i class="fa-duotone fa-calendar-range text-purple-400"></i> Event Date To
+                    </label>
+                    <input type="date" name="date_to" value="{{ request('date_to') }}" 
+                           class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
+                </div>
+                <div class="flex items-end gap-2">
+                    <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition">
+                        <i class="fa-duotone fa-filter"></i>
+                        Filter
+                    </button>
+                    <a href="{{ route('leads.index') }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-gray-500/20 text-gray-300 rounded-lg hover:bg-gray-500/30 transition">
+                        <i class="fa-duotone fa-rotate-left"></i>
+                        Reset
+                    </a>
+                </div>
             </div>
         </form>
     </x-card>
@@ -102,7 +133,7 @@
                                         {{ $lead->status === 'qualified' ? 'bg-purple-500/20 text-purple-300' : '' }}
                                         {{ $lead->status === 'converted' ? 'bg-green-500/20 text-green-300' : '' }}
                                         {{ $lead->status === 'lost' ? 'bg-red-500/20 text-red-300' : '' }}"
-                                        {{ !auth()->user()->can('edit lead') ? 'disabled' : '' }}>
+                                        {{ !auth()->user()->can('edit leads') ? 'disabled' : '' }}>
                                     <option value="new" {{ $lead->status === 'new' ? 'selected' : '' }}>New</option>
                                     <option value="contacted" {{ $lead->status === 'contacted' ? 'selected' : '' }}>Contacted</option>
                                     <option value="follow_up" {{ $lead->status === 'follow_up' ? 'selected' : '' }}>Follow Up</option>
@@ -114,24 +145,23 @@
                             <td class="px-4 py-3 text-sm text-gray-300">{{ $lead->user->name }}</td>
                             <td class="px-4 py-3 text-right">
                                 <div class="flex justify-end gap-2">
-                                    <a href="{{ route('leads.show', $lead) }}" class="text-blue-400 hover:text-blue-300 transition">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
+                                    <a href="{{ route('leads.show', $lead) }}" 
+                                       class="inline-flex items-center justify-center w-8 h-8 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors"
+                                       title="View Details">
+                                        <i class="fa-duotone fa-eye"></i>
                                     </a>
-                                    @can('edit lead')
-                                        <a href="{{ route('leads.edit', $lead) }}" class="text-purple-400 hover:text-purple-300 transition">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                            </svg>
+                                    @can('edit leads')
+                                        <a href="{{ route('leads.edit', $lead) }}" 
+                                           class="inline-flex items-center justify-center w-8 h-8 bg-purple-500/20 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-colors"
+                                           title="Edit Lead">
+                                            <i class="fa-duotone fa-pen-to-square"></i>
                                         </a>
                                     @endcan
-                                    @can('delete lead')
-                                        <button onclick="deleteLead({{ $lead->id }})" class="text-red-400 hover:text-red-300 transition">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
+                                    @can('delete leads')
+                                        <button onclick="deleteLead({{ $lead->id }})" 
+                                                class="inline-flex items-center justify-center w-8 h-8 bg-red-500/20 text-red-300 rounded-lg hover:bg-red-500/30 transition-colors"
+                                                title="Delete Lead">
+                                            <i class="fa-duotone fa-trash"></i>
                                         </button>
                                     @endcan
                                 </div>

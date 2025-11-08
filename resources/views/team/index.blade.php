@@ -72,7 +72,8 @@
         @if($teamMembers->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($teamMembers as $member)
-            <x-card class="hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location='{{ route('team.show', $member) }}'">
+            @if($member->user)
+            <x-card class="hover:shadow-xl transition-shadow cursor-pointer" onclick="window.location='{{ route('team.show', ['team' => $member]) }}'">
                 <div class="flex items-start justify-between mb-4">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
@@ -124,16 +125,17 @@
                 </div>
 
                 <div class="flex gap-2 pt-4 border-t border-gray-200 dark:border-white/10">
-                    <a href="{{ route('team.show', $member) }}" class="flex-1 px-3 py-1.5 text-center text-sm bg-purple-100 dark:bg-white/10 text-purple-900 dark:text-white rounded hover:bg-purple-200 dark:hover:bg-white/20 transition">
+                    <a href="{{ route('team.show', ['team' => $member]) }}" class="flex-1 px-3 py-1.5 text-center text-sm bg-purple-100 dark:bg-white/10 text-purple-900 dark:text-white rounded hover:bg-purple-200 dark:hover:bg-white/20 transition">
                         View Details
                     </a>
                     @can('edit team members')
-                    <a href="{{ route('team.edit', $member) }}" class="flex-1 px-3 py-1.5 text-center text-sm bg-blue-100 dark:bg-blue-500/20 text-blue-900 dark:text-blue-400 rounded hover:bg-blue-200 dark:hover:bg-blue-500/30 transition">
+                    <a href="{{ route('team.edit', ['team' => $member]) }}" class="flex-1 px-3 py-1.5 text-center text-sm bg-blue-100 dark:bg-blue-500/20 text-blue-900 dark:text-blue-400 rounded hover:bg-blue-200 dark:hover:bg-blue-500/30 transition">
                         Edit
                     </a>
                     @endcan
                 </div>
             </x-card>
+            @endif
             @endforeach
         </div>
 
