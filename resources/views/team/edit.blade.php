@@ -7,7 +7,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
-                <a href="{{ route('team.show', ['team' => $teamMember]) }}" class="hover:text-purple-600 dark:hover:text-purple-400">{{ $teamMember->user->name }}</a>
+                <a href="{{ route('team.show', ['team' => $team]) }}" class="hover:text-purple-600 dark:hover:text-purple-400">{{ $team->user->name }}</a>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
@@ -29,7 +29,7 @@
                         name="name" 
                         type="text" 
                         required 
-                        value="{{ $teamMember->user->name }}"
+                        value="{{ $team->user->name }}"
                         placeholder="Enter full name"
                     />
                     
@@ -38,7 +38,7 @@
                         name="email" 
                         type="email" 
                         required 
-                        value="{{ $teamMember->user->email }}"
+                        value="{{ $team->user->email }}"
                         placeholder="email@example.com"
                     />
                     
@@ -46,7 +46,7 @@
                         label="Phone Number" 
                         name="phone" 
                         type="tel" 
-                        value="{{ $teamMember->user->phone ?? '' }}"
+                        value="{{ $team->user->phone ?? '' }}"
                         placeholder="+880 1XXX-XXXXXX"
                     />
                     
@@ -67,7 +67,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-white/80 mb-2">System Role *</label>
                         <select name="role" required class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500" style="color-scheme: dark;">
                             @foreach($roles as $role)
-                            <option value="{{ $role->name }}" {{ $teamMember->user->hasRole($role->name) ? 'selected' : '' }} style="background-color: #1f2937; color: white;">{{ ucfirst($role->name) }}</option>
+                            <option value="{{ $role->name }}" {{ $team->user->hasRole($role->name) ? 'selected' : '' }} style="background-color: #1f2937; color: white;">{{ ucfirst($role->name) }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -75,30 +75,30 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-white/80 mb-2">Job Type *</label>
                         <select name="role_type" required class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500" style="color-scheme: dark;">
-                            <option value="photographer" {{ $teamMember->role_type == 'photographer' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Photographer</option>
-                            <option value="videographer" {{ $teamMember->role_type == 'videographer' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Videographer</option>
-                            <option value="editor" {{ $teamMember->role_type == 'editor' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Editor</option>
-                            <option value="assistant" {{ $teamMember->role_type == 'assistant' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Assistant</option>
-                            <option value="sales_manager" {{ $teamMember->role_type == 'sales_manager' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Sales Manager</option>
+                            <option value="photographer" {{ $team->role_type == 'photographer' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Photographer</option>
+                            <option value="videographer" {{ $team->role_type == 'videographer' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Videographer</option>
+                            <option value="editor" {{ $team->role_type == 'editor' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Editor</option>
+                            <option value="assistant" {{ $team->role_type == 'assistant' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Assistant</option>
+                            <option value="sales_manager" {{ $team->role_type == 'sales_manager' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Sales Manager</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-white/80 mb-2">Skill Level *</label>
                         <select name="skill_level" required class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500" style="color-scheme: dark;">
-                            <option value="junior" {{ $teamMember->skill_level == 'junior' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Junior</option>
-                            <option value="mid_level" {{ $teamMember->skill_level == 'mid_level' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Mid-Level</option>
-                            <option value="senior" {{ $teamMember->skill_level == 'senior' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Senior</option>
-                            <option value="expert" {{ $teamMember->skill_level == 'expert' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Expert</option>
+                            <option value="junior" {{ $team->skill_level == 'junior' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Junior</option>
+                            <option value="mid_level" {{ $team->skill_level == 'mid_level' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Mid-Level</option>
+                            <option value="senior" {{ $team->skill_level == 'senior' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Senior</option>
+                            <option value="expert" {{ $team->skill_level == 'expert' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Expert</option>
                         </select>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-white/80 mb-2">Availability Status *</label>
                         <select name="availability_status" required class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500" style="color-scheme: dark;">
-                            <option value="available" {{ $teamMember->availability_status == 'available' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Available</option>
-                            <option value="busy" {{ $teamMember->availability_status == 'busy' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Busy</option>
-                            <option value="on_leave" {{ $teamMember->availability_status == 'on_leave' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">On Leave</option>
+                            <option value="available" {{ $team->availability_status == 'available' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Available</option>
+                            <option value="busy" {{ $team->availability_status == 'busy' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Busy</option>
+                            <option value="on_leave" {{ $team->availability_status == 'on_leave' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">On Leave</option>
                         </select>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                         name="hourly_rate" 
                         type="number" 
                         step="0.01"
-                        value="{{ $teamMember->hourly_rate ?? '' }}"
+                        value="{{ $team->hourly_rate ?? '' }}"
                         placeholder="0.00"
                     />
                     
@@ -121,14 +121,14 @@
                         label="Portfolio Link" 
                         name="portfolio_link" 
                         type="url" 
-                        value="{{ $teamMember->portfolio_link ?? '' }}"
+                        value="{{ $team->portfolio_link ?? '' }}"
                         placeholder="https://portfolio.example.com"
                     />
                 </div>
 
                 <div class="mt-4">
                     <label class="block text-sm font-medium text-gray-700 dark:text-white/80 mb-2">Equipment Owned</label>
-                    <textarea name="equipment_owned" rows="3" placeholder="List equipment owned (cameras, lenses, lights, etc.)" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500">{{ $teamMember->equipment_owned ?? '' }}</textarea>
+                    <textarea name="equipment_owned" rows="3" placeholder="List equipment owned (cameras, lenses, lights, etc.)" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-white/20 bg-white dark:bg-white/5 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500">{{ $team->equipment_owned ?? '' }}</textarea>
                 </div>
             </x-card>
 
@@ -138,7 +138,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="flex items-center gap-3 cursor-pointer">
-                            <input type="checkbox" name="is_default_assigned" value="1" {{ $teamMember->is_default_assigned ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 dark:border-white/20 text-purple-600 focus:ring-purple-500">
+                            <input type="checkbox" name="is_default_assigned" value="1" {{ $team->is_default_assigned ? 'checked' : '' }} class="w-5 h-5 rounded border-gray-300 dark:border-white/20 text-purple-600 focus:ring-purple-500">
                             <div>
                                 <span class="text-sm font-medium text-gray-900 dark:text-white">Default Assignment</span>
                                 <p class="text-xs text-gray-600 dark:text-white/60">Auto-assign to new events</p>
@@ -150,7 +150,7 @@
                         label="Priority Order" 
                         name="priority_order" 
                         type="number" 
-                        value="{{ $teamMember->priority_order ?? 0 }}"
+                        value="{{ $team->priority_order ?? 0 }}"
                         placeholder="0"
                         helpText="Lower number = higher priority"
                     />
@@ -165,7 +165,7 @@
                     </svg>
                     Update Team Member
                 </button>
-                <a href="{{ route('team.show', ['team' => $teamMember]) }}" class="px-6 py-3 bg-gray-200 dark:bg-white/10 text-gray-900 dark:text-white rounded-xl hover:bg-gray-300 dark:hover:bg-white/20 transition">
+                <a href="{{ route('team.show', ['team' => $team]) }}" class="px-6 py-3 bg-gray-200 dark:bg-white/10 text-gray-900 dark:text-white rounded-xl hover:bg-gray-300 dark:hover:bg-white/20 transition">
                     Cancel
                 </a>
             </div>
@@ -187,7 +187,7 @@
             const formData = new FormData(form);
             
             try {
-                const response = await fetch('{{ route("team.update", $teamMember) }}', {
+                const response = await fetch('{{ route("team.update", $team) }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',

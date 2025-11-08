@@ -117,9 +117,9 @@ class TeamMemberController extends Controller
         }
     }
 
-    public function show(TeamMember $teamMember)
+    public function show(TeamMember $team)
     {
-        $teamMember->load([
+        $team->load([
             'user',
             'assignedEventsAsPhotographer.order.lead',
             'assignedEventsAsVideographer.order.lead'
@@ -127,31 +127,31 @@ class TeamMemberController extends Controller
 
         // Calculate statistics
         $stats = [
-            'total_events' => $teamMember->assignedEventsAsPhotographer->count() + 
-                            $teamMember->assignedEventsAsVideographer->count(),
-            'completed_events' => $teamMember->assignedEventsAsPhotographer->where('status', 'completed')->count() + 
-                                $teamMember->assignedEventsAsVideographer->where('status', 'completed')->count(),
-            'upcoming_events' => $teamMember->assignedEventsAsPhotographer->where('status', 'scheduled')->count() + 
-                               $teamMember->assignedEventsAsVideographer->where('status', 'scheduled')->count(),
-            'in_progress_events' => $teamMember->assignedEventsAsPhotographer->where('status', 'in_progress')->count() + 
-                                  $teamMember->assignedEventsAsVideographer->where('status', 'in_progress')->count(),
+            'total_events' => $team->assignedEventsAsPhotographer->count() + 
+                            $team->assignedEventsAsVideographer->count(),
+            'completed_events' => $team->assignedEventsAsPhotographer->where('status', 'completed')->count() + 
+                                $team->assignedEventsAsVideographer->where('status', 'completed')->count(),
+            'upcoming_events' => $team->assignedEventsAsPhotographer->where('status', 'scheduled')->count() + 
+                               $team->assignedEventsAsVideographer->where('status', 'scheduled')->count(),
+            'in_progress_events' => $team->assignedEventsAsPhotographer->where('status', 'in_progress')->count() + 
+                                  $team->assignedEventsAsVideographer->where('status', 'in_progress')->count(),
         ];
 
-        return view('team.show', compact('teamMember', 'stats'));
+        return view('team.show', compact('team', 'stats'));
     }
 
-    public function edit(TeamMember $teamMember)
+    public function edit(TeamMember $team)
     {
-        $teamMember->load('user');
+        $team->load('user');
         $roles = Role::whereIn('name', ['photographer', 'videographer', 'manager'])->get();
-        return view('team.edit', compact('teamMember', 'roles'));
+        return view('team.edit', compact('team', 'roles'));
     }
 
-    public function update(Request $request, TeamMember $teamMember)
+    public function update(Request $request, TeamMember $team)
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($teamMember->user_id)],
+            'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($team->user_id)],
             'password' => 'nullable|min:8',
             'phone' => 'nullable|string|max:20',
             'role' => 'required|exists:roles,name',
@@ -178,15 +178,15 @@ class TeamMemberController extends Controller
                 $updateData['password'] = Hash::make($validated['password']);
             }
 
-            $teamMember->user->update($updateData);
+            $team->user->update($updateData);
 
             // Update role if changed
-            if ($teamMember->user->roles->first()->name != $validated['role']) {
-                $teamMember->user->syncRoles([$validated['role']]);
+            if ($team->user->roles->first()->name != $validated['role']) {
+                $team->user->syncRoles([$validated['role']]);
             }
 
             // Update team member profile
-            $teamMember->update([
+            $team->update([
                 'role_type' => $validated['role_type'],
                 'skill_level' => $validated['skill_level'],
                 'availability_status' => $validated['availability_status'],
@@ -198,16 +198,16 @@ class TeamMemberController extends Controller
             ]);
 
             activity()
-                ->performedOn($teamMember)
+                ->performedOn($team)
                 ->causedBy(auth()->user())
-                ->log('Team member updated: ' . $teamMember->user->name);
+                ->log('Team member updated: ' . $team->user->name);
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Team member updated successfully',
-                'redirect' => route('team.show', $teamMember)
+                'redirect' => route('team.show', $team)
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -219,12 +219,12 @@ class TeamMemberController extends Controller
         }
     }
 
-    public function destroy(TeamMember $teamMember)
+    public function destroy(TeamMember $team)
     {
         try {
             // Check if team member has assigned events
-            $hasEvents = $teamMember->assignedEventsAsPhotographer()->exists() || 
-                        $teamMember->assignedEventsAsVideographer()->exists();
+            $hasEvents = $team->assignedEventsAsPhotographer()->exists() || 
+                        $team->assignedEventsAsVideographer()->exists();
 
             if ($hasEvents) {
                 return response()->json([
@@ -233,11 +233,14 @@ class TeamMemberController extends Controller
                 ], 422);
             }
 
-            $userName = $teamMember->user->name;
-            $user = $teamMember->user;
+            $userName = $team->user ? $team->user->name : 'Unknown User';
+            $user = $team->user;
 
-            $teamMember->delete();
-            $user->delete();
+            $team->delete();
+            
+            if ($user) {
+                $user->delete();
+            }
 
             activity()
                 ->causedBy(auth()->user())
@@ -269,7 +272,7 @@ class TeamMemberController extends Controller
         activity()
             ->performedOn($teamMember)
             ->causedBy(auth()->user())
-            ->log('Availability updated: ' . $teamMember->user->name . ' - ' . $validated['availability_status']);
+            ->log('Availability updated: ' . ($teamMember->user ? $teamMember->user->name : 'Unknown') . ' - ' . $validated['availability_status']);
 
         return response()->json([
             'success' => true,
