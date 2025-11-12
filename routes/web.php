@@ -16,6 +16,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\CallQueueController;
+use App\Http\Controllers\LeadDialerController;
 
 Route::get('/', function () {
     return redirect()->route('dashboard');
@@ -81,6 +83,24 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/deliverables/{deliverable}/status', [DeliverableController::class, 'updateStatus'])
         ->name('deliverables.update-status')
         ->middleware('permission:edit deliverables');
+    
+    // Call Queue & Lead Dialer
+    Route::prefix('call-queue')->name('call-queue.')->group(function () {
+        Route::get('/', [CallQueueController::class, 'index'])->name('index');
+        Route::get('/dialer', [LeadDialerController::class, 'index'])->name('dialer');
+        Route::get('/today', [CallQueueController::class, 'today'])->name('today');
+        Route::get('/scheduled', [CallQueueController::class, 'scheduled'])->name('scheduled');
+        Route::get('/pending', [CallQueueController::class, 'pending'])->name('pending');
+        Route::get('/follow-ups', [CallQueueController::class, 'followUps'])->name('follow-ups');
+        Route::get('/history', [CallQueueController::class, 'history'])->name('history');
+        
+        // Lead actions in dialer
+        Route::post('/leads/{lead}/lock', [LeadDialerController::class, 'lock'])->name('leads.lock');
+        Route::post('/leads/{lead}/unlock', [LeadDialerController::class, 'unlock'])->name('leads.unlock');
+        Route::post('/leads/{lead}/extend-lock', [LeadDialerController::class, 'extendLock'])->name('leads.extend-lock');
+        Route::post('/leads/{lead}/activity', [LeadDialerController::class, 'recordActivity'])->name('leads.activity');
+        Route::post('/leads/{lead}/skip', [LeadDialerController::class, 'skip'])->name('leads.skip');
+    });
     
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index')->middleware('permission:view reports');

@@ -17,26 +17,26 @@
         <!-- Statistics -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <x-stat-card 
-                label="Total Users" 
-                :value="$users->total()" 
+                title="Total Users" 
+                :value="(string)$users->total()" 
                 icon="users"
                 color="purple"
             />
             <x-stat-card 
-                label="Admins" 
-                :value="App\Models\User::role('admin')->count()" 
+                title="Admins" 
+                :value="(string)App\Models\User::role('admin')->count()" 
                 icon="shield-check"
                 color="red"
             />
             <x-stat-card 
-                label="Managers" 
-                :value="App\Models\User::role('manager')->count()" 
+                title="Managers" 
+                :value="(string)App\Models\User::role('manager')->count()" 
                 icon="briefcase"
                 color="blue"
             />
             <x-stat-card 
-                label="Photographers" 
-                :value="App\Models\User::role('photographer')->count()" 
+                title="Photographers" 
+                :value="(string)App\Models\User::role('photographer')->count()" 
                 icon="camera"
                 color="green"
             />
