@@ -180,7 +180,7 @@
                         @forelse($upcomingEvents as $event)
                         <tr class="hover:bg-purple-50 dark:hover:bg-white/5 transition">
                             <td class="py-3 px-4 text-sm text-gray-900 dark:text-white font-medium">
-                                {{ $event->order->lead->client_name }}
+                                {{ $event->order->client_display_name }}
                             </td>
                             <td class="py-3 px-4 text-sm text-gray-900 dark:text-white capitalize">
                                 {{ str_replace('_', ' ', $event->event_type) }}

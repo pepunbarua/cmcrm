@@ -213,7 +213,7 @@
                         <a href="{{ route('events.show', $event) }}" class="block p-3 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-purple-50 dark:hover:bg-white/5 transition">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
-                                    <h4 class="font-medium text-gray-900 dark:text-white">{{ $event->order->lead->client_name }}</h4>
+                                    <h4 class="font-medium text-gray-900 dark:text-white">{{ $event->order->client_display_name }}</h4>
                                     <p class="text-sm text-gray-600 dark:text-white/60">{{ $event->venue }}</p>
                                 </div>
                                 <span class="px-2 py-1 text-xs rounded-full
@@ -248,7 +248,7 @@
                         <a href="{{ route('events.show', $event) }}" class="block p-3 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-pink-50 dark:hover:bg-white/5 transition">
                             <div class="flex justify-between items-start mb-2">
                                 <div>
-                                    <h4 class="font-medium text-gray-900 dark:text-white">{{ $event->order->lead->client_name }}</h4>
+                                    <h4 class="font-medium text-gray-900 dark:text-white">{{ $event->order->client_display_name }}</h4>
                                     <p class="text-sm text-gray-600 dark:text-white/60">{{ $event->venue }}</p>
                                 </div>
                                 <span class="px-2 py-1 text-xs rounded-full

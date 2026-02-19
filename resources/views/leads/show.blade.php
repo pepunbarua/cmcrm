@@ -14,7 +14,7 @@
                     </a>
                 @endcan
                 @if($lead->status === 'qualified' && !$lead->order)
-                    @can('create order')
+                    @can('create orders')
                         <button onclick="convertToOrder()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
                             Convert to Order
                         </button>

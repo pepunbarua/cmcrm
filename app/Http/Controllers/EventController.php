@@ -15,13 +15,20 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Event::with(['order.lead'])
+        $query = Event::with(['order.lead', 'order.customer'])
             ->when($request->status, function($q) use ($request) {
                 $q->where('status', $request->status);
             })
             ->when($request->search, function($q) use ($request) {
-                $q->whereHas('order.lead', function($query) use ($request) {
-                    $query->where('client_name', 'like', '%' . $request->search . '%');
+                $search = trim((string) $request->search);
+                $q->whereHas('order', function($query) use ($search) {
+                    $query->where('client_name', 'like', '%' . $search . '%')
+                        ->orWhereHas('lead', function ($leadQuery) use ($search) {
+                            $leadQuery->where('client_name', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('customer', function ($customerQuery) use ($search) {
+                            $customerQuery->where('full_name', 'like', '%' . $search . '%');
+                        });
                 });
             })
             ->orderBy('event_date', 'asc');
@@ -38,7 +45,7 @@ class EventController extends Controller
     {
         $order = null;
         if ($request->order_id) {
-            $order = Order::with('lead')->findOrFail($request->order_id);
+            $order = Order::with(['lead', 'customer'])->findOrFail($request->order_id);
             
             // Check if order already has an event
             if ($order->event) {
@@ -98,7 +105,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        $event->load(['order.lead', 'photographer', 'videographer', 'deliverables', 'notes.user']);
+        $event->load(['order.lead', 'order.customer', 'photographer', 'videographer', 'deliverables', 'notes.user']);
         return view('events.show', compact('event'));
     }
 
@@ -179,4 +186,3 @@ class EventController extends Controller
         return $teamMember?->id;
     }
 }
-

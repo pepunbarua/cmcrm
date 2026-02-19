@@ -7,6 +7,8 @@ use App\Http\Controllers\VendorTypeController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\FollowUpController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PackageController;
+use App\Http\Controllers\PackageContentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventNoteController;
@@ -56,6 +58,9 @@ Route::middleware(['auth'])->group(function () {
 
     // Orders
     Route::resource('orders', OrderController::class);
+    Route::resource('packages', PackageController::class);
+    Route::resource('package-contents', PackageContentController::class)
+        ->parameters(['package-contents' => 'packageContent']);
 
     // Payments
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');

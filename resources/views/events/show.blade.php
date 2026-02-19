@@ -3,9 +3,9 @@
         <div class="flex items-center justify-between">
             <div>
                 <h1 class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    {{ $event->order->lead->client_name }}
+                    {{ $event->order->client_display_name }}
                 </h1>
-                <p class="text-gray-400 mt-1">{{ ucfirst($event->order->lead->event_type) }} Event</p>
+                <p class="text-gray-400 mt-1">{{ ucfirst($event->order->event_type) }} Event</p>
             </div>
             <div class="flex gap-3">
                 @can('edit events')
@@ -168,11 +168,11 @@
                     </div>
                     <div>
                         <p class="text-sm text-gray-400">Client Phone</p>
-                        <p class="text-white font-medium">{{ $event->order->lead->client_phone }}</p>
+                        <p class="text-white font-medium">{{ $event->order->client_display_phone }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-400">Package</p>
-                        <p class="text-white font-medium">{{ $event->order->package_name }}</p>
+                        <p class="text-white font-medium">{{ $event->order->package_display_name }}</p>
                     </div>
                     <div>
                         <p class="text-sm text-gray-400">Total Amount</p>
@@ -188,7 +188,7 @@
             <x-card>
                 <h2 class="text-xl font-semibold text-white mb-4">Quick Actions</h2>
                 <div class="space-y-2">
-                    <button onclick="window.location.href='tel:{{ $event->order->lead->client_phone }}'" class="w-full px-4 py-2 bg-green-500/20 text-green-300 rounded-lg hover:bg-green-500/30 transition flex items-center justify-center gap-2">
+                    <button onclick="window.location.href='tel:{{ $event->order->client_display_phone }}'" class="w-full px-4 py-2 bg-green-500/20 text-green-300 rounded-lg hover:bg-green-500/30 transition flex items-center justify-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
                         </svg>

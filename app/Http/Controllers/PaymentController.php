@@ -6,7 +6,6 @@ use App\Models\Payment;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -15,38 +14,51 @@ class PaymentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Payment::with('order.lead');
+        $query = Payment::with(['order.lead', 'order.customer']);
 
-        // Filter by status
         if ($request->filled('status')) {
-            if ($request->status == 'due') {
-                $query->where('status', 'pending')
-                      ->where('due_date', '>=', Carbon::now());
-            } elseif ($request->status == 'overdue') {
-                $query->where('status', 'pending')
-                      ->where('due_date', '<', Carbon::now());
-            } else {
-                $query->where('status', $request->status);
-            }
+            $status = $request->status;
+            $query->whereHas('order', function ($orderQuery) use ($status) {
+                if (in_array($status, ['pending', 'partial', 'paid'], true)) {
+                    $orderQuery->where('payment_status', $status);
+                    return;
+                }
+
+                if ($status === 'due') {
+                    $orderQuery->whereIn('payment_status', ['pending', 'partial']);
+                    return;
+                }
+
+                if ($status === 'completed') {
+                    $orderQuery->where('payment_status', 'paid');
+                    return;
+                }
+
+                if ($status === 'overdue') {
+                    // Overdue cannot be derived without due date; keep empty result for compatibility.
+                    $orderQuery->whereRaw('1 = 0');
+                }
+            });
         }
 
-        // Search by order number or client name
         if ($request->filled('search')) {
             $search = $request->search;
             $query->whereHas('order', function($q) use ($search) {
                 $q->where('order_number', 'like', "%{$search}%")
-                  ->orWhereHas('lead', function($q2) use ($search) {
-                      $q2->where('client_name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('client_name', 'like', "%{$search}%")
+                    ->orWhereHas('lead', function($q2) use ($search) {
+                        $q2->where('client_name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('customer', function($q2) use ($search) {
+                        $q2->where('full_name', 'like', "%{$search}%");
+                    });
             });
         }
 
-        // Filter by payment method
         if ($request->filled('payment_method')) {
             $query->where('payment_method', $request->payment_method);
         }
 
-        // Filter by date range
         if ($request->filled('from_date')) {
             $query->where('payment_date', '>=', $request->from_date);
         }
@@ -56,14 +68,12 @@ class PaymentController extends Controller
 
         $payments = $query->orderBy('payment_date', 'desc')->paginate(15);
 
-        // Calculate statistics
+        $pendingAmount = (float) Order::whereIn('payment_status', ['pending', 'partial'])->sum('balance_due');
         $stats = [
-            'total_amount' => Payment::where('status', 'completed')->sum('amount'),
-            'pending_amount' => Payment::where('status', 'pending')->sum('amount'),
-            'overdue_count' => Payment::where('status', 'pending')
-                                     ->where('due_date', '<', Carbon::now())
-                                     ->count(),
-            'completed_count' => Payment::where('status', 'completed')->count(),
+            'total_amount' => (float) Payment::sum('amount'),
+            'pending_amount' => $pendingAmount,
+            'overdue_count' => 0,
+            'completed_count' => (int) Payment::count(),
         ];
 
         return view('payments.index', compact('payments', 'stats'));
@@ -77,23 +87,43 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'order_id' => 'required|exists:orders,id',
             'amount' => 'required|numeric|min:0',
-            'payment_method' => 'required|in:cash,bank_transfer,bkash,nagad,card',
+            'payment_method' => 'required|in:cash,bank_transfer,card,mobile_banking,cheque,bkash,nagad',
             'payment_date' => 'required|date',
             'notes' => 'nullable|string',
         ]);
 
-        $validated['status'] = 'completed';
+        if (in_array($validated['payment_method'], ['bkash', 'nagad'], true)) {
+            $provider = ucfirst($validated['payment_method']);
+            $validated['notes'] = trim(($validated['notes'] ?? '') . ' ' . "(Provider: {$provider})");
+            $validated['payment_method'] = 'mobile_banking';
+        }
+
+        $validated['payment_type'] = 'partial';
+        $validated['received_by'] = Auth::id();
 
         $payment = Payment::create($validated);
 
-        // Update order payment status
         $order = Order::findOrFail($validated['order_id']);
-        $totalPaid = $order->payments()->where('status', 'completed')->sum('amount');
-        
+        $totalPaid = (float) $order->payments()->sum('amount');
+
         if ($totalPaid >= $order->total_amount) {
-            $order->update(['payment_status' => 'paid']);
+            $order->update([
+                'payment_status' => 'paid',
+                'balance_due' => 0,
+                'advance_paid' => $totalPaid,
+            ]);
         } elseif ($totalPaid > 0) {
-            $order->update(['payment_status' => 'partial']);
+            $order->update([
+                'payment_status' => 'partial',
+                'balance_due' => max(0, (float) $order->total_amount - $totalPaid),
+                'advance_paid' => $totalPaid,
+            ]);
+        } else {
+            $order->update([
+                'payment_status' => 'pending',
+                'balance_due' => (float) $order->total_amount,
+                'advance_paid' => 0,
+            ]);
         }
 
         activity()
@@ -121,15 +151,26 @@ class PaymentController extends Controller
             
         $payment->delete();
 
-        // Recalculate order payment status
-        $totalPaid = $order->payments()->where('status', 'completed')->sum('amount');
-        
+        $totalPaid = (float) $order->payments()->sum('amount');
+
         if ($totalPaid >= $order->total_amount) {
-            $order->update(['payment_status' => 'paid']);
+            $order->update([
+                'payment_status' => 'paid',
+                'balance_due' => 0,
+                'advance_paid' => $totalPaid,
+            ]);
         } elseif ($totalPaid > 0) {
-            $order->update(['payment_status' => 'partial']);
+            $order->update([
+                'payment_status' => 'partial',
+                'balance_due' => max(0, (float) $order->total_amount - $totalPaid),
+                'advance_paid' => $totalPaid,
+            ]);
         } else {
-            $order->update(['payment_status' => 'pending']);
+            $order->update([
+                'payment_status' => 'pending',
+                'balance_due' => (float) $order->total_amount,
+                'advance_paid' => 0,
+            ]);
         }
 
         return response()->json([

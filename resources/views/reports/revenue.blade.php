@@ -122,8 +122,7 @@
                             <div class="h-full rounded-full
                                 @if($method->payment_method == 'cash') bg-green-500
                                 @elseif($method->payment_method == 'bank_transfer') bg-blue-500
-                                @elseif($method->payment_method == 'bkash') bg-pink-500
-                                @elseif($method->payment_method == 'nagad') bg-orange-500
+                                @elseif($method->payment_method == 'mobile_banking') bg-pink-500
                                 @else bg-purple-500
                                 @endif"
                                  style="width: {{ $maxRevenue > 0 ? ($method->total_amount / $maxRevenue) * 100 : 0 }}%">
@@ -181,12 +180,13 @@
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-white/80">Client</th>
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-700 dark:text-white/80">Method</th>
                             <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-white/80">Amount</th>
-                            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-700 dark:text-white/80">Status</th>
+                            <th class="text-right py-3 px-4 text-sm font-semibold text-gray-700 dark:text-white/80">Order Due</th>
+                            <th class="text-center py-3 px-4 text-sm font-semibold text-gray-700 dark:text-white/80">Order Payment</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-white/10">
                         @php
-                            $payments = \App\Models\Payment::with('order.lead')
+                            $payments = \App\Models\Payment::with(['order.customer', 'order.lead'])
                                 ->whereBetween('payment_date', [$startDate, $endDate])
                                 ->latest('payment_date')
                                 ->limit(50)
@@ -201,41 +201,40 @@
                                 {{ $payment->order->order_number }}
                             </td>
                             <td class="py-3 px-4 text-sm text-gray-900 dark:text-white">
-                                {{ $payment->order->lead->client_name }}
+                                {{ $payment->order->client_display_name }}
                             </td>
                             <td class="py-3 px-4">
                                 <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
                                     @if($payment->payment_method == 'cash') bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400
                                     @elseif($payment->payment_method == 'bank_transfer') bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400
-                                    @elseif($payment->payment_method == 'bkash') bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400
-                                    @elseif($payment->payment_method == 'nagad') bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400
+                                    @elseif($payment->payment_method == 'mobile_banking') bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400
                                     @else bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400
                                     @endif">
-                                    {{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}
+                                    {{ $payment->payment_method === 'mobile_banking' ? 'Mobile Banking' : ucfirst(str_replace('_', ' ', $payment->payment_method)) }}
                                 </span>
                             </td>
                             <td class="py-3 px-4 text-sm text-right font-bold text-gray-900 dark:text-white">
                                 ৳{{ number_format($payment->amount, 2) }}
                             </td>
+                            <td class="py-3 px-4 text-sm text-right font-bold text-gray-900 dark:text-white">
+                                ৳{{ number_format((float) $payment->order->balance_due, 2) }}
+                            </td>
                             <td class="py-3 px-4 text-center">
+                                @php
+                                    $orderPaymentStatus = $payment->order->payment_status ?? 'pending';
+                                @endphp
                                 <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium
-                                    @if($payment->status == 'completed') bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400
-                                    @elseif($payment->status == 'pending' && \Carbon\Carbon::parse($payment->due_date)->isPast()) bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400
-                                    @else bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400
+                                    @if($orderPaymentStatus === 'paid') bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400
+                                    @elseif($orderPaymentStatus === 'partial') bg-yellow-100 dark:bg-yellow-500/20 text-yellow-700 dark:text-yellow-400
+                                    @else bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400
                                     @endif">
-                                    @if($payment->status == 'completed')
-                                        Completed
-                                    @elseif($payment->status == 'pending' && \Carbon\Carbon::parse($payment->due_date)->isPast())
-                                        Overdue
-                                    @else
-                                        Pending
-                                    @endif
+                                    {{ ucfirst($orderPaymentStatus) }}
                                 </span>
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="py-8 text-center text-gray-600 dark:text-white/60">
+                            <td colspan="7" class="py-8 text-center text-gray-600 dark:text-white/60">
                                 No payments found for this period
                             </td>
                         </tr>

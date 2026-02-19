@@ -68,7 +68,7 @@
                         <option value="" style="background-color: #1f2937; color: white;">All Events</option>
                         @foreach($events as $event)
                         <option value="{{ $event->id }}" {{ request('event_id') == $event->id ? 'selected' : '' }} style="background-color: #1f2937; color: white;">
-                            {{ $event->order->lead->client_name }} - {{ $event->event_date->format('M d, Y') }}
+                            {{ $event->order->client_display_name }} - {{ $event->event_date->format('M d, Y') }}
                         </option>
                         @endforeach
                     </select>
@@ -142,7 +142,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
-                        {{ $deliverable->event->order->lead->client_name }}
+                        {{ $deliverable->event->order->client_display_name }}
                     </div>
                     <div class="flex items-center gap-2 text-gray-600 dark:text-white/60">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

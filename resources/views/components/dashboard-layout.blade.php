@@ -107,6 +107,9 @@
                     </div>
                     @endcan
                     
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
                     <!-- Call Queue -->
                     <div x-data="{ open: {{ request()->routeIs('call-queue.*') ? 'true' : 'false' }} }">
                         <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('call-queue.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
@@ -144,6 +147,33 @@
                             <a href="{{ route('call-queue.history') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200">
                                 <i class="fa-duotone fa-clock-rotate-left text-xs"></i>
                                 Call History
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Menu Divider -->
+                    <div class="h-px bg-gradient-to-r from-transparent via-purple-200/50 dark:via-white/10 to-transparent my-2"></div>
+                    
+                    <div x-data="{ open: {{ request()->routeIs('packages.*') || request()->routeIs('package-contents.*') ? 'true' : 'false' }} }">
+                        <button @click="open = !open" class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl {{ request()->routeIs('packages.*') || request()->routeIs('package-contents.*') ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 text-purple-600 dark:text-purple-300 border border-purple-500/30 shadow-sm' : 'text-gray-600 dark:text-white/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 dark:hover:from-white/5 dark:hover:to-white/5 hover:text-purple-600 dark:hover:text-purple-300' }} transition-all duration-200">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-duotone fa-boxes-stacked text-lg"></i>
+                                <span class="font-medium text-sm">Packages</span>
+                            </div>
+                            <i class="fa-duotone fa-chevron-down text-xs transition-transform duration-200" :class="open ? 'rotate-180' : ''"></i>
+                        </button>
+                        <div x-show="open" x-collapse class="ml-8 mt-2 space-y-1 pb-2">
+                            <a href="{{ route('packages.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('packages.index') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list text-xs"></i>
+                                All Packages
+                            </a>
+                            <a href="{{ route('packages.create') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('packages.create') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-plus text-xs"></i>
+                                New Package
+                            </a>
+                            <a href="{{ route('package-contents.index') }}" class="flex items-center gap-2 px-4 py-2 rounded-lg text-sm {{ request()->routeIs('package-contents.*') ? 'bg-purple-50 dark:bg-white/5 text-purple-600 dark:text-purple-400 font-medium' : 'text-gray-600 dark:text-white/60 hover:bg-purple-50/50 dark:hover:bg-white/5 hover:text-purple-600 dark:hover:text-purple-400' }} transition-all duration-200">
+                                <i class="fa-duotone fa-list-check text-xs"></i>
+                                Package Contents
                             </a>
                         </div>
                     </div>
@@ -504,4 +534,3 @@
     </script>
 </body>
 </html>
-

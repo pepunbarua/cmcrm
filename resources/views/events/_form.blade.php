@@ -13,7 +13,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div>
                     <p class="text-gray-400">Client Name</p>
-                    <p class="text-white font-medium">{{ $order->lead->client_name }}</p>
+                    <p class="text-white font-medium">{{ $order->client_display_name }}</p>
                 </div>
                 <div>
                     <p class="text-gray-400">Order Number</p>
@@ -21,11 +21,11 @@
                 </div>
                 <div>
                     <p class="text-gray-400">Event Type</p>
-                    <p class="text-white font-medium">{{ ucfirst($order->lead->event_type) }}</p>
+                    <p class="text-white font-medium">{{ ucfirst($order->event_type) }}</p>
                 </div>
                 <div>
                     <p class="text-gray-400">Package</p>
-                    <p class="text-white font-medium">{{ $order->package_name }}</p>
+                    <p class="text-white font-medium">{{ $order->package_display_name }}</p>
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
             <label class="block text-sm font-medium text-gray-300 mb-2">
                 Event Date <span class="text-red-400">*</span>
             </label>
-            <input type="date" name="event_date" value="{{ old('event_date', $event->event_date ?? $order?->lead->event_date ?? '') }}" required 
+            <input type="date" name="event_date" value="{{ old('event_date', $event->event_date ?? $order?->event_date ?? '') }}" required 
                    class="w-full px-4 py-2 rounded-lg bg-white/10 backdrop-blur-md border border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-purple-400">
         </div>
 

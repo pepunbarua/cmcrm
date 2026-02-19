@@ -60,8 +60,7 @@
                         <option value="" style="background-color: #1f2937; color: white;">All Methods</option>
                         <option value="cash" {{ request('payment_method') == 'cash' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Cash</option>
                         <option value="bank_transfer" {{ request('payment_method') == 'bank_transfer' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Bank Transfer</option>
-                        <option value="bkash" {{ request('payment_method') == 'bkash' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">bKash</option>
-                        <option value="nagad" {{ request('payment_method') == 'nagad' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Nagad</option>
+                        <option value="mobile_banking" {{ request('payment_method') == 'mobile_banking' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Mobile Banking</option>
                         <option value="card" {{ request('payment_method') == 'card' ? 'selected' : '' }} style="background-color: #1f2937; color: white;">Card</option>
                     </select>
                 </div>
@@ -99,8 +98,8 @@
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Method</th>
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Payment Date</th>
-                            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Due Date</th>
-                            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Status</th>
+                            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Balance Due</th>
+                            <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Order Payment</th>
                             <th class="text-left py-3 px-4 text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
                         </tr>
                     </thead>
@@ -113,14 +112,14 @@
                                 </a>
                             </td>
                             <td class="py-3 px-4 text-gray-900 dark:text-white">
-                                {{ $payment->order->lead->client_name }}
+                                {{ $payment->order->client_display_name }}
                             </td>
                             <td class="py-3 px-4">
                                 <span class="font-semibold text-gray-900 dark:text-white">৳{{ number_format($payment->amount, 2) }}</span>
                             </td>
                             <td class="py-3 px-4">
                                 <span class="px-2 py-1 text-xs rounded-full bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white capitalize">
-                                    {{ str_replace('_', ' ', $payment->payment_method) }}
+                                    {{ $payment->payment_method === 'mobile_banking' ? 'mobile banking' : str_replace('_', ' ', $payment->payment_method) }}
                                 </span>
                             </td>
                             <td class="py-3 px-4 text-sm text-gray-600 dark:text-white/60">
@@ -131,29 +130,19 @@
                                 @endif
                             </td>
                             <td class="py-3 px-4 text-sm text-gray-600 dark:text-white/60">
-                                @if($payment->due_date)
-                                {{ $payment->due_date->format('M d, Y') }}
-                                @if($payment->status == 'pending' && $payment->due_date->isPast())
-                                <span class="text-red-600 dark:text-red-400 text-xs">(Overdue)</span>
-                                @endif
-                                @else
-                                -
-                                @endif
+                                ৳{{ number_format((float) $payment->order->balance_due, 2) }}
                             </td>
                             <td class="py-3 px-4">
-                                @if($payment->status == 'completed')
-                                <span class="px-2 py-1 text-xs bg-green-500/20 text-green-600 dark:text-green-400 rounded-full">
-                                    Completed
+                                @php
+                                    $orderPaymentStatus = $payment->order->payment_status ?? 'pending';
+                                @endphp
+                                <span class="px-2 py-1 text-xs rounded-full
+                                    @if($orderPaymentStatus === 'paid') bg-green-500/20 text-green-600 dark:text-green-400
+                                    @elseif($orderPaymentStatus === 'partial') bg-yellow-500/20 text-yellow-600 dark:text-yellow-400
+                                    @else bg-red-500/20 text-red-600 dark:text-red-400
+                                    @endif">
+                                    {{ ucfirst($orderPaymentStatus) }}
                                 </span>
-                                @elseif($payment->status == 'pending' && $payment->due_date && $payment->due_date->isPast())
-                                <span class="px-2 py-1 text-xs bg-red-500/20 text-red-600 dark:text-red-400 rounded-full">
-                                    Overdue
-                                </span>
-                                @else
-                                <span class="px-2 py-1 text-xs bg-yellow-500/20 text-yellow-600 dark:text-yellow-400 rounded-full">
-                                    Pending
-                                </span>
-                                @endif
                             </td>
                             <td class="py-3 px-4">
                                 <div class="flex gap-2">
@@ -164,13 +153,11 @@
                                         </svg>
                                     </a>
                                     @can('delete payments')
-                                    @if($payment->status == 'pending')
                                     <button onclick="deletePayment({{ $payment->id }})" class="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300" title="Delete">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                         </svg>
                                     </button>
-                                    @endif
                                     @endcan
                                 </div>
                             </td>

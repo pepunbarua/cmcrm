@@ -44,8 +44,8 @@
                     <!-- Header -->
                     <div class="flex items-start justify-between">
                         <div class="flex-1">
-                            <h3 class="text-lg font-semibold text-white">{{ $event->order->lead->client_name }}</h3>
-                            <p class="text-sm text-gray-400">{{ ucfirst($event->order->lead->event_type) }}</p>
+                            <h3 class="text-lg font-semibold text-white">{{ $event->order->client_display_name }}</h3>
+                            <p class="text-sm text-gray-400">{{ ucfirst($event->order->event_type) }}</p>
                         </div>
                         <span class="px-2 py-1 text-xs rounded-full
                             {{ $event->status === 'scheduled' ? 'bg-blue-500/20 text-blue-300' : '' }}

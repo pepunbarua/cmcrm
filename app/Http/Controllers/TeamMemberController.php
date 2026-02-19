@@ -121,7 +121,9 @@ class TeamMemberController extends Controller
     {
         $team->load([
             'user',
+            'assignedEventsAsPhotographer.order.customer',
             'assignedEventsAsPhotographer.order.lead',
+            'assignedEventsAsVideographer.order.customer',
             'assignedEventsAsVideographer.order.lead'
         ]);
 

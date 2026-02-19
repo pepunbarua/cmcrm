@@ -21,9 +21,7 @@ class ReportController extends Controller
 
         // Overview Statistics
         $stats = [
-            'total_revenue' => Payment::where('status', 'completed')
-                ->whereBetween('payment_date', [$startDate, $endDate])
-                ->sum('amount'),
+            'total_revenue' => Payment::whereBetween('payment_date', [$startDate, $endDate])->sum('amount'),
             'total_orders' => Order::whereBetween('created_at', [$startDate, $endDate])->count(),
             'total_events' => Event::whereBetween('event_date', [$startDate, $endDate])->count(),
             'total_leads' => Lead::whereBetween('created_at', [$startDate, $endDate])->count(),
@@ -35,9 +33,9 @@ class ReportController extends Controller
         $revenueData = $this->getMonthlyRevenue(6);
 
         // Order status distribution
-        $orderStatusData = Order::select('status', DB::raw('count(*) as count'))
+        $orderStatusData = Order::select('order_status as status', DB::raw('count(*) as count'))
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy('status')
+            ->groupBy('order_status')
             ->get();
 
         // Event status distribution
@@ -67,23 +65,14 @@ class ReportController extends Controller
 
         // Revenue statistics
         $stats = [
-            'total_revenue' => Payment::where('status', 'completed')
-                ->whereBetween('payment_date', [$startDate, $endDate])
-                ->sum('amount'),
-            'pending_amount' => Payment::where('status', 'pending')
-                ->whereBetween('due_date', [$startDate, $endDate])
-                ->sum('amount'),
-            'average_payment' => Payment::where('status', 'completed')
-                ->whereBetween('payment_date', [$startDate, $endDate])
-                ->avg('amount'),
-            'payment_count' => Payment::where('status', 'completed')
-                ->whereBetween('payment_date', [$startDate, $endDate])
-                ->count(),
+            'total_revenue' => Payment::whereBetween('payment_date', [$startDate, $endDate])->sum('amount'),
+            'pending_amount' => Order::whereIn('payment_status', ['pending', 'partial'])->sum('balance_due'),
+            'average_payment' => Payment::whereBetween('payment_date', [$startDate, $endDate])->avg('amount'),
+            'payment_count' => Payment::whereBetween('payment_date', [$startDate, $endDate])->count(),
         ];
 
         // Revenue by payment method
-        $revenueByMethod = Payment::select('payment_method', DB::raw('sum(amount) as total'))
-            ->where('status', 'completed')
+        $revenueByMethod = Payment::select('payment_method', DB::raw('sum(amount) as total_amount'))
             ->whereBetween('payment_date', [$startDate, $endDate])
             ->groupBy('payment_method')
             ->get();
@@ -93,34 +82,35 @@ class ReportController extends Controller
                 DB::raw('DATE(payment_date) as date'),
                 DB::raw('sum(amount) as total')
             )
-            ->where('status', 'completed')
             ->whereBetween('payment_date', [$startDate, $endDate])
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
         // Monthly comparison (current vs previous period)
-        $currentPeriodRevenue = Payment::where('status', 'completed')
-            ->whereBetween('payment_date', [$startDate, $endDate])
-            ->sum('amount');
+        $currentPeriodRevenue = Payment::whereBetween('payment_date', [$startDate, $endDate])->sum('amount');
 
         $periodLength = Carbon::parse($startDate)->diffInDays(Carbon::parse($endDate));
         $previousStartDate = Carbon::parse($startDate)->subDays($periodLength);
         $previousEndDate = Carbon::parse($startDate)->subDay();
 
-        $previousPeriodRevenue = Payment::where('status', 'completed')
-            ->whereBetween('payment_date', [$previousStartDate, $previousEndDate])
-            ->sum('amount');
+        $previousPeriodRevenue = Payment::whereBetween('payment_date', [$previousStartDate, $previousEndDate])->sum('amount');
 
-        $revenueChange = $previousPeriodRevenue > 0 
+        $revenueChange = $previousPeriodRevenue > 0
             ? (($currentPeriodRevenue - $previousPeriodRevenue) / $previousPeriodRevenue) * 100 
             : 0;
+
+        $comparison = [
+            'current' => (float) $currentPeriodRevenue,
+            'previous' => (float) $previousPeriodRevenue,
+            'percentage_change' => (float) $revenueChange,
+        ];
 
         return view('reports.revenue', compact(
             'stats',
             'revenueByMethod',
             'dailyRevenue',
-            'revenueChange',
+            'comparison',
             'startDate',
             'endDate'
         ));
@@ -160,20 +150,20 @@ class ReportController extends Controller
             ->get();
 
         // Monthly event trend (last 6 months)
-        $monthlyEvents = [];
+        $monthlyTrend = collect();
         for ($i = 5; $i >= 0; $i--) {
             $month = Carbon::now()->subMonths($i);
             $count = Event::whereYear('event_date', $month->year)
                 ->whereMonth('event_date', $month->month)
                 ->count();
-            $monthlyEvents[] = [
+            $monthlyTrend->push([
                 'month' => $month->format('M Y'),
                 'count' => $count
-            ];
+            ]);
         }
 
         // Upcoming events
-        $upcomingEvents = Event::with('order.lead', 'photographer.user', 'videographer.user')
+        $upcomingEvents = Event::with('order.customer', 'order.lead', 'photographer.user', 'videographer.user')
             ->where('status', 'scheduled')
             ->where('event_date', '>=', Carbon::now())
             ->orderBy('event_date')
@@ -184,7 +174,7 @@ class ReportController extends Controller
             'stats',
             'eventsByStatus',
             'eventsByVenue',
-            'monthlyEvents',
+            'monthlyTrend',
             'upcomingEvents',
             'startDate',
             'endDate'
@@ -263,8 +253,7 @@ class ReportController extends Controller
         $data = [];
         for ($i = $months - 1; $i >= 0; $i--) {
             $month = Carbon::now()->subMonths($i);
-            $revenue = Payment::where('status', 'completed')
-                ->whereYear('payment_date', $month->year)
+            $revenue = Payment::whereYear('payment_date', $month->year)
                 ->whereMonth('payment_date', $month->month)
                 ->sum('amount');
             
@@ -273,7 +262,7 @@ class ReportController extends Controller
                 'revenue' => $revenue
             ];
         }
-        return $data;
+        return collect($data);
     }
 
     private function getTopTeamMembers($startDate, $endDate, $limit = 5)

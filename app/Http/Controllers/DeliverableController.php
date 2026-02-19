@@ -12,7 +12,7 @@ class DeliverableController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Deliverable::with('event.order.lead');
+        $query = Deliverable::with(['event.order.customer', 'event.order.lead']);
 
         // Filter by status
         if ($request->filled('status')) {
@@ -29,8 +29,16 @@ class DeliverableController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('file_name', 'like', "%{$search}%")
-                  ->orWhereHas('event.order.lead', function($q2) use ($search) {
-                      $q2->where('client_name', 'like', "%{$search}%");
+                  ->orWhereHas('event.order', function($q2) use ($search) {
+                      $q2->where('client_name', 'like', "%{$search}%")
+                          ->orWhereHas('customer', function ($customerQuery) use ($search) {
+                              $customerQuery->where('full_name', 'like', "%{$search}%")
+                                  ->orWhere('phone', 'like', "%{$search}%");
+                          })
+                          ->orWhereHas('lead', function ($leadQuery) use ($search) {
+                              $leadQuery->where('client_name', 'like', "%{$search}%")
+                                  ->orWhere('client_phone', 'like', "%{$search}%");
+                          });
                   });
             });
         }
@@ -45,14 +53,14 @@ class DeliverableController extends Controller
             'delivered' => Deliverable::where('status', 'delivered')->count(),
         ];
 
-        $events = Event::with('order.lead')->orderBy('event_date', 'desc')->get();
+        $events = Event::with(['order.customer', 'order.lead'])->orderBy('event_date', 'desc')->get();
 
         return view('deliverables.index', compact('deliverables', 'stats', 'events'));
     }
 
     public function create(Request $request)
     {
-        $events = Event::with('order.lead')
+        $events = Event::with(['order.customer', 'order.lead'])
                       ->whereIn('status', ['completed', 'in_progress'])
                       ->orderBy('event_date', 'desc')
                       ->get();
@@ -114,7 +122,7 @@ class DeliverableController extends Controller
 
     public function show(Deliverable $deliverable)
     {
-        $deliverable->load('event.order.lead');
+        $deliverable->load(['event.order.customer', 'event.order.lead']);
         return view('deliverables.show', compact('deliverable'));
     }
 
